@@ -25,22 +25,12 @@ int	path_envp(char **envp, t_pipex *pipex)
 }
 
 
-int	clean_slash(t_pipex *pipex, char *av)
+int	switch_cmd(t_pipex *pipex, char *av)
 {
-	if (pipex->tmp[0][0] == '/')
-	{
-		pipex->cmd = ft_split((av + 1), ' ');
-		if (pipex->cmd == NULL)
-			return (clean_split(pipex->tmp), 1);
-		clean_split(pipex->tmp);
-	}
-	else
-	{
-		pipex->cmd = ft_split((av), ' ');
-		if (pipex->cmd == NULL)
-			return (clean_split(pipex->tmp), 1);
-		clean_split(pipex->tmp);
-	}
+	pipex->cmd = ft_split((av), ' ');
+	if (pipex->cmd == NULL)
+		return (clean_split(pipex->tmp), 1);
+	clean_split(pipex->tmp);
 	return (0);
 }
 
@@ -59,18 +49,32 @@ int	access_path(t_pipex *pipex)
 	return (0);
 }
 
-int	cmd_exec(t_pipex *pipex)
+int	cmd_exec(t_pipex *pipex, char *av)
 {
+	pipex->check_aout = 0;
 	if (access(pipex->tmp[0], F_OK) == 0)
 	{
 		if (access(pipex->tmp[0], X_OK) == 0)
+		{
+			pipex->check_aout = 1;
+			if (switch_cmd(pipex, av))
+				return (1);
+			if (ft_strchr(pipex->cmd[0], '/') == NULL)
+			{
+				print_error_cmd(pipex, pipex->cmd[0]);
+				return (clean_split(pipex->cmd), 1);
+			}
 			return (0);
+		}
 		else
 		{
 			pipex->exit_str =  ft_strdup(DENIED);
+			clean_split(pipex->tmp);
 			return (1);
 		}
 	}
+	if (switch_cmd(pipex, av))
+		return (1);
 	return (0);
 }
 
@@ -81,10 +85,10 @@ int	check_path(t_pipex *pipex, char *av, char **envp)
 	pipex->tmp = ft_split(av, ' ');
 	if (pipex->tmp == NULL)
 		return (1);
-	if (cmd_exec(pipex))
-		return (clean_split(pipex->tmp), 1);
-	if (clean_slash(pipex, av))
+	if (cmd_exec(pipex, av))
 		return (1);
+	if (pipex->check_aout == 1)
+		return (0);
 	pipex->directory = ft_strtok(pipex->path_head, ':');
 	while (pipex->directory != NULL)
 	{
@@ -95,12 +99,9 @@ int	check_path(t_pipex *pipex, char *av, char **envp)
 		if (pipex->path_find == NULL)
 			return (free(pipex->directory), path_clean(pipex), 1);
 		if (access_path(pipex))
-		{
-			printf("CMD: %s\n", pipex->cmd[0]);
 			return (free(pipex->directory), free(pipex->tmp_dir), 0);
-		}
 		pipex->directory = ft_strtok(NULL, ':');
 		path_clean(pipex);
 	}
-	return (print_error(pipex), clean_split(pipex->cmd), 1);
+	return (print_error_cmd(pipex, pipex->cmd[0]), clean_split(pipex->cmd), 1);
 }

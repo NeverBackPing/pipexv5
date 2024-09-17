@@ -73,14 +73,16 @@ int	check_fd(t_pipex *pipex, char **str)
 	pipex->fd[1] = open(pipex->outfile, O_WRONLY | O_TRUNC, 0777);
 	if (fd_outfile(pipex))
 		return (1);
-	if (access(pipex->infile, R_OK) != 0 && pipex->fd[0]  > 0)
+	if (access(pipex->infile, R_OK) != 0 && pipex->fd[0]  < 0)
 		return (error_file_denied(pipex->infile, pipex), 1);
 	if (access(pipex->infile, F_OK) != 0)
 	{
 		pipex->fd[0] = open("/dev/null", O_RDONLY, 0777);
+		if (pipex->fd[0]  <= 0)
+			return (error_file_denied("/dev/null", pipex), 1);
 		pipex->check = 1;
 	}
-	if (access(pipex->outfile, W_OK) != 0)
+	if (access(pipex->outfile, W_OK) != 0 || pipex->fd[0] <= 0)
 		return (error_file_denied(pipex->outfile, pipex), 1);
 	return (0);
 }

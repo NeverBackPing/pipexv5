@@ -17,7 +17,7 @@ int	manage_child(t_pipex *pipex, char *av, char **envp)
 	if (access(pipex->infile, F_OK) == 0)
 	{
 		if (check_path(pipex, av, envp))
-			return (close_fd(pipex), exit_out(pipex), 1);
+			return (exit_out(pipex), close_fd(pipex), 1);
 	}
 	if (dup2(pipex->fd[0], STDIN_FILENO) == -1)
 	{
@@ -32,7 +32,7 @@ int	manage_child(t_pipex *pipex, char *av, char **envp)
 	close(pipex->pipe_fd[0]);
 	if (pipex->check == 0)
 	{
-		if (exec_cmd(pipex, envp) == -1)
+		if (exec_cmd(pipex, envp) == 1)
 		{
 			close_fd(pipex);
 			return (exit_out(pipex),1);
@@ -67,7 +67,7 @@ int	manage_child2(t_pipex *pipex, char *av, char **envp)
 {
 	if (check_path(pipex, av, envp))
 	{
-		return (close_fd(pipex), exit_out(pipex), 1);
+		return (exit_out(pipex), close_fd(pipex), 1);
 	}
 	if (dup2(pipex->fd[1], STDOUT_FILENO) == -1)
 	{
@@ -82,7 +82,7 @@ int	manage_child2(t_pipex *pipex, char *av, char **envp)
 		return (exit_out(pipex), 1);
 	}
 	close(pipex->pipe_fd[1]);
-	if (exec_cmd(pipex, envp) == -1)
+	if (exec_cmd(pipex, envp) == 1)
 	{
 		close_fd(pipex);
 		exit_out(pipex);
