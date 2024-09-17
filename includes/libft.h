@@ -17,7 +17,6 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <limits.h>
-# include "../includes/pipex.h"
 # include "get_next_line.h"
 
 //LIBC and LIBBSD

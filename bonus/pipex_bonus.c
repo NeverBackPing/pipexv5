@@ -59,18 +59,17 @@ int	main(int ac, char **av, char **envp)
 		manage_here_doc(&pipex, av, ac);
 	else
 		manage_io(&pipex, av, ac);
-	if (pipex.check == 0)
-	{
+	/*if (pipex.check == 0)
+	{*/
 		while (pipex.index < (size_t)ac - 2)
 			cmd(&pipex, av[pipex.index++], envp);
-	}
-	if (dup2(pipex.fd[1], STDOUT_FILENO) < 0)
-	{
+	/*}*/
+	/*if (*/dup2(pipex.fd[1], STDOUT_FILENO);/* < 0)*/
+	/*{
 		perror("dup2");
 		close(pipex.fd[1]);
 		exit(5);
-	}
-	close(pipex.fd[1]);
+	}*/
 	execout(&pipex, av[pipex.index], envp);
 	exit(0);
 }

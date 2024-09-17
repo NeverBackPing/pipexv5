@@ -50,6 +50,7 @@ typedef struct s_pipex_b
 //Cmd
 void	cmd(t_pipex_b *pipex, char *av, char **envp);
 //Exec
+int	access_path_bonus(t_pipex_b *pipex, char *cmd);
 void	execout(t_pipex_b *pipex, char *cmd, char **envp);
 //Fd
 int		fd(t_pipex_b *pipex, char *finename, int check_fd);
