@@ -20,6 +20,7 @@ void	close_file(t_pipex *pipex)
 		exit(pipex->out);
 	}
 	close(pipex->pipe_fd[1]);
+	close(pipex->pipe_fd[0]);
 }
 
 int	fd_outfile(t_pipex *pipex)
@@ -68,18 +69,13 @@ int	check_fd(t_pipex *pipex, char **str)
 	if (pipex->infile == NULL || pipex->outfile == NULL)
 		return (1);
 	pipex->fd[0] = open(pipex->infile, O_RDONLY, 0777);
-	if (fd_infile(pipex))
-		return (1);
+	fd_infile(pipex);
 	pipex->fd[1] = open(pipex->outfile, O_WRONLY | O_TRUNC, 0777);
 	if (fd_outfile(pipex))
 		return (1);
-	if (access(pipex->infile, R_OK) != 0 && pipex->fd[0]  > 0)
-		return (error_file_denied(pipex->infile, pipex), 1);
-	if (access(pipex->infile, F_OK) != 0)
+	if (access(pipex->infile, F_OK | R_OK) != 0)
 	{
 		pipex->fd[0] = open("/dev/null", O_RDONLY, 0777);
-		if (pipex->fd[0]  < 0)
-			return (error_file_denied("/dev/null", pipex), 1);
 		pipex->check = 1;
 	}
 	if (access(pipex->outfile, W_OK) != 0 || pipex->fd[0] <= 0)
