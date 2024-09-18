@@ -12,6 +12,29 @@
 
 #include "../includes/pipex_bonus.h"
 
+void	error_cmd_aout(char *cmd)
+{
+	if (ft_strchr(cmd, '/') != NULL)
+		write_str2(cmd,": No such file or directory\n", 2);
+	else
+		write_str2(cmd,": Command not found\n", 2);
+}
+
+void	clean_split(char **array)
+{
+	int	i;
+
+	i = 0;
+	if (array == NULL)
+		return ;
+	if (array)
+	{
+		while (array[i] != NULL)
+			free(array[i++]);
+		free(array);
+	}
+}
+
 void	manage_here_doc(t_pipex_b *pipex, char **av, int ac)
 {
 	pipex->index = 3;
@@ -35,7 +58,7 @@ void	manage_io(t_pipex_b *pipex, char **av, int ac)
 {
 	pipex->fd[0] = fd(pipex, av[1], 0);
 	pipex->fd[1] = fd(pipex, av[ac - 1], 1);
-	if (dup2(pipex->fd[0], 0) == -1)
+	if (dup2(pipex->fd[0], STDIN_FILENO) == -1)
 	{
 		write_str("Input/output error\n", 2);
 		close(pipex->fd[0]);
@@ -51,6 +74,7 @@ int	main(int ac, char **av, char **envp)
 {
 	t_pipex_b	pipex;
 
+	pipex.out = 0;
 	pipex.index = 2;
 	pipex.check = 0;
 	if (ac < 5)
@@ -59,17 +83,17 @@ int	main(int ac, char **av, char **envp)
 		manage_here_doc(&pipex, av, ac);
 	else
 		manage_io(&pipex, av, ac);
-	/*if (pipex.check == 0)
-	{*/
+	if (pipex.check == 0)
+	{
 		while (pipex.index < (size_t)ac - 2)
 			cmd(&pipex, av[pipex.index++], envp);
-	/*}*/
-	/*if (*/dup2(pipex.fd[1], STDOUT_FILENO);/* < 0)*/
-	/*{
+	}
+	if (dup2(pipex.fd[1], STDOUT_FILENO) < 0)
+	{
 		perror("dup2");
 		close(pipex.fd[1]);
 		exit(5);
-	}*/
+	}
 	execout(&pipex, av[pipex.index], envp);
 	exit(0);
 }

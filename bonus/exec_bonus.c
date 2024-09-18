@@ -12,20 +12,6 @@
 
 #include "../includes/pipex_bonus.h"
 
-void	clean_split(char **array)
-{
-	int	i;
-
-	i = 0;
-	if (array == NULL)
-		return ;
-	if (array)
-	{
-		while (array[i] != NULL)
-			free(array[i++]);
-		free(array);
-	}
-}
 
 int	envp_path(char **envp, t_pipex_b *pipex)
 {
@@ -64,8 +50,6 @@ int	find_path(t_pipex_b *pipex, char *cmd, char **envp)
 {
 	char	*tmp_dir;
 
-	if ((ft_strchr(cmd, '~') != NULL) && ft_strchr(cmd, '/'))
-		return (write_str2(cmd, ": No such file or directory\n", 2), 1);
 	envp_path(envp, pipex);
 	pipex->directory = ft_strtok(pipex->path_head, ':');
 	while (pipex->directory != NULL)
@@ -82,6 +66,8 @@ int	find_path(t_pipex_b *pipex, char *cmd, char **envp)
 		free(pipex->path);
 		free(tmp_dir);
 	}
+	if (ft_strchr(cmd, '/') != NULL)
+		return (write_str2(cmd,": No such file or directory\n", 2), 1);
 	return (write_str2(cmd,": Command not found\n", 2), 1);
 }
 
@@ -89,13 +75,26 @@ void	exec_aout(char **envp, char *cmd)
 {
 	char	**tmp_flag;
 
+	if (access(cmd, X_OK) == 0)
+	{
+		if (cmd[0] == '.' && cmd[1] == '/')
+			NULL;
+		else
+		{
+			error_cmd_aout(cmd);
+			return ;
+		}
+	}
 	tmp_flag = ft_split(cmd, ' ');
 	if (tmp_flag == NULL)
-		return ;
-	if (cmd[0] == '.' && cmd[1] == '/')
+		exit(5);
+	if (execve(cmd, tmp_flag, envp) == -1)
 	{
-		if (execve(cmd, tmp_flag, envp) == -1)
-			clean_split(tmp_flag);
+		if (ft_strchr(cmd, '/') != NULL)
+			write_str2(cmd,": No such file or directory\n", 2);
+		else
+			write_str("Operation not permitted\n", 2);
+		clean_split(tmp_flag);
 	}
 }
 
@@ -103,12 +102,17 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp)
 {
 	char	**tmp_flag;
 
-	if (cmd[0] == '.' && cmd[1] == '/')
+	if (access(cmd, F_OK) == 0)
 	{
 		exec_aout(envp, cmd);
 		return ;
 	}
 	tmp_flag = ft_split(cmd, ' ');
+	if (tmp_flag == NULL)
+	{
+		exit(5);
+		return ;
+	}
 	if (find_path(pipex, tmp_flag[0], envp))
 	{
 		clean_split(tmp_flag);
@@ -116,8 +120,9 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp)
 	}
 	if (execve(pipex->path, tmp_flag, envp) == -1)
 	{
+		write_str("Operation not permitted\n", 2);
 		clean_split(tmp_flag);
 		close(pipex->fd[1]);
-		exit(0);
+		exit(1);
 	}
 }

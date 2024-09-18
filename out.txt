@@ -1,0 +1,19 @@
+total 188$
+-rwxrwxrwx 1 never never  5836 Sep 16 23:18 Makefile$
+drwxrwxrwx 1 never never  4096 Sep 18 16:40 bonus$
+-rwxrwxrwx 1 never never    18 Sep 18 16:02 cat -eout.txt$
+-rwxrwxrwx 1 never never     0 Sep 18 16:42 cava$
+-rwxrwxrwx 1 never never  5792 Sep 18 12:54 get_next_line.a$
+-rwxrwxrwx 1 never never     0 Sep 17 15:37 ggg$
+drwxrwxrwx 1 never never  4096 Sep 18 12:54 gnl$
+-rwxrwxrwx 1 never never     0 Sep 18 14:52 hello.txt$
+drwxrwxrwx 1 never never  4096 Sep 17 14:08 includes$
+-rwxrwxrwx 1 never never     0 Sep 17 14:15 infile.txt$
+drwxrwxrwx 1 never never  4096 Sep 18 12:54 libc$
+-rwxrwxrwx 1 never never 84092 Sep 18 12:54 libft.a$
+-rwxrwxrwx 1 never never 21602 Sep 18 12:54 libftprintf.a$
+-rwxrwxrwx 1 never never     0 Sep 18 16:42 out.txt$
+-rwxrwxrwx 1 never never 44056 Sep 18 16:40 pipex$
+drwxrwxrwx 1 never never  4096 Sep 18 12:54 printf$
+drwxrwxrwx 1 never never  4096 Sep 18 13:20 srcs$
+-rwxrwxrwx 1 never never 15968 Sep 11 20:35 test$

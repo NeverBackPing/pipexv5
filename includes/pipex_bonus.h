@@ -50,7 +50,7 @@ typedef struct s_pipex_b
 //Cmd
 void	cmd(t_pipex_b *pipex, char *av, char **envp);
 //Exec
-int	access_path_bonus(t_pipex_b *pipex, char *cmd);
+int		access_path_bonus(t_pipex_b *pipex, char *cmd);
 void	execout(t_pipex_b *pipex, char *cmd, char **envp);
 //Fd
 int		fd(t_pipex_b *pipex, char *finename, int check_fd);
@@ -59,6 +59,8 @@ void	check_here_doc(t_pipex_b *pipex);
 int		display_str(t_pipex_b *pipex, char **av);
 int		read_infile(t_pipex_b *pipex, char **av);
 //Pipex
+void	error_cmd_aout(char *cmd);
+void	clean_split(char **array);
 void	manage_here_doc(t_pipex_b *pipex, char **av, int ac);
 void	manage_io(t_pipex_b *pipex, char **av, int ac);
 //Return
