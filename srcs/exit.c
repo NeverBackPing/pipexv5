@@ -19,8 +19,6 @@ void	exit_out(t_pipex *pipex)
 	{
 		if (ft_strncmp(pipex->exit_str, OPD, ft_strlen(OPD)) == 0)
 			pipex->out = 1;
-		if (ft_strncmp(pipex->exit_str, PATH, ft_strlen(PATH)) == 0)
-			pipex->out = 1;
 		if (ft_strncmp(pipex->exit_str, NOSUCH, ft_strlen(NOSUCH)) == 0)
 			pipex->out = 2;
 		if (ft_strncmp(pipex->exit_str, IO, ft_strlen(IO)) == 0)

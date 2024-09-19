@@ -35,7 +35,7 @@ int	manage_child(t_pipex *pipex, char *av, char **envp)
 		if (exec_cmd(pipex, envp) == 1)
 		{
 			close_fd(pipex);
-			return (exit_out(pipex),1);
+			return (exit_out(pipex), 1);
 		}
 	}
 	return (0);

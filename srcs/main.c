@@ -22,6 +22,7 @@ int	fork_main(t_pipex *pipex, char **av, char **envp)
 	}
 	if (pipex->child == 0)
 	{
+		pipex->out = 0;
 		if (child_fork(pipex, av, envp))
 		{
 			exit(pipex->out);
@@ -39,6 +40,7 @@ int	fork_main(t_pipex *pipex, char **av, char **envp)
 	}
 	if (pipex->child2 == 0)
 	{
+		pipex->out = 0;
 		if (child2_fork(pipex, av, envp))
 			exit(pipex->out);
 		else

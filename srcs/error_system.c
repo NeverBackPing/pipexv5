@@ -15,13 +15,16 @@
 
 void	exit_error(t_pipex *pipex, char **av)
 {
+	pipex->out = 0;
 	pipex->out = WEXITSTATUS(pipex->status);
 	perror_return(pipex, av[2]);
 }
 
 void	exit_error2(t_pipex *pipex, char **av)
 {
+	pipex->out = 0;
 	pipex->out = WEXITSTATUS(pipex->status2);
+	printf("out %d\n", pipex->out);
 	perror_return(pipex, av[3]);
 	free_file(pipex);
 }

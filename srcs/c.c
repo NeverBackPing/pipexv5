@@ -16,11 +16,6 @@ int	path_envp(char **envp, t_pipex *pipex)
 		}
 		i++;
 	}
-	if (pipex->path_head == NULL)
-	{
-		pipex->exit_str = ft_strdup(PATH);
-		return (1);
-	}
 	return (0);
 }
 
@@ -80,8 +75,7 @@ int	cmd_exec(t_pipex *pipex, char *av)
 
 int	check_path(t_pipex *pipex, char *av, char **envp)
 {
-	if (path_envp(envp, pipex))
-		return (1);
+	path_envp(envp, pipex);
 	pipex->tmp = ft_split(av, ' ');
 	if (pipex->tmp == NULL)
 		return (1);
