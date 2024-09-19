@@ -78,7 +78,7 @@ int	main(int ac, char **av, char **envp)
 	pipex.index = 2;
 	pipex.check = 0;
 	if (ac < 5)
-		return (ft_printf("./pipex infile cmd1 cmd2 oufile\n"), 0);
+		return (ft_printf("./pipex infile cmd1 cmd2 oufile\n"), 1);
 	else if (ft_strcmp(av[1], "here_doc") == 0)
 		manage_here_doc(&pipex, av, ac);
 	else
@@ -94,6 +94,7 @@ int	main(int ac, char **av, char **envp)
 		close(pipex.fd[1]);
 		exit(5);
 	}
+	close(pipex.fd[1]);
 	execout(&pipex, av[pipex.index], envp);
 	exit(0);
 }

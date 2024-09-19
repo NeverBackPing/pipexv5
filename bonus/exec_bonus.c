@@ -28,8 +28,6 @@ int	envp_path(char **envp, t_pipex_b *pipex)
 		}
 		i++;
 	}
-	if (pipex->path_head == NULL)
-		return (1);
 	return (0);
 }
 
@@ -42,7 +40,6 @@ int	access_path_bonus(t_pipex_b *pipex, char *cmd)
 		else
 			return (write_str2(cmd, ": permission denied\n", 2), 1);
 	}
-
 	return (0);
 }
 
@@ -126,3 +123,4 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp)
 		exit(1);
 	}
 }
+
