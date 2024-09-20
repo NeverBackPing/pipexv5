@@ -104,12 +104,16 @@ int	main(int ac, char **av, char **envp)
 	}
 	close(pipex.fd[1]);
 	execout(&pipex, av[pipex.index], envp);
-	while(j++ < i)
+	if ((pids == 0))
 	{
-		if (waitpid(pids[j], &pipex.status, 0) == -1)
-			perror("waitpid");
-		else
-		pipex.out = WEXITSTATUS(pipex.status);
+
+		while(j++ < i)
+		{
+			if (waitpid(pids[j], &pipex.status, 0) == -1)
+				perror("waitpid");
+			else
+			pipex.out = WEXITSTATUS(pipex.status);
+		}
 	}
 	exit(pipex.out);
 }

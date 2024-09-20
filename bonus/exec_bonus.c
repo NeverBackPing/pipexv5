@@ -88,9 +88,13 @@ void	exec_aout(char **envp, char *cmd)
 	if (execve(cmd, tmp_flag, envp) == -1)
 	{
 		if (ft_strchr(cmd, '/') != NULL)
+		{
 			write_str2(cmd,": No such file or directory\n", 2);
+			exit(2);
+		}
 		else
 			write_str("Operation not permitted\n", 2);
+		exit(1);
 		clean_split(tmp_flag);
 	}
 }
