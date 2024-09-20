@@ -73,12 +73,17 @@ void	manage_io(t_pipex_b *pipex, char **av, int ac)
 int	main(int ac, char **av, char **envp)
 {
 	t_pipex_b	pipex;
+	pid_t		pids[ac - 2];
+	size_t		i;
+	size_t		j;
 
+	j = 0;
+	i = 0;
 	pipex.out = 0;
 	pipex.index = 2;
 	pipex.check = 0;
 	if (ac < 5)
-		return (ft_printf("./pipex infile cmd1 cmd2 oufile\n"), 1);
+		return (ft_printf("./pipex infile cmd1...cmdn oufile\n"), 1);
 	else if (ft_strcmp(av[1], "here_doc") == 0)
 		manage_here_doc(&pipex, av, ac);
 	else
@@ -86,7 +91,10 @@ int	main(int ac, char **av, char **envp)
 	if (pipex.check == 0)
 	{
 		while (pipex.index < (size_t)ac - 2)
+		{
 			cmd(&pipex, av[pipex.index++], envp);
+			pids[i++] = pipex.pid;
+		}
 	}
 	if (dup2(pipex.fd[1], STDOUT_FILENO) < 0)
 	{
@@ -96,5 +104,12 @@ int	main(int ac, char **av, char **envp)
 	}
 	close(pipex.fd[1]);
 	execout(&pipex, av[pipex.index], envp);
-	exit(0);
+	while(j++ < i)
+	{
+		if (waitpid(pids[j], &pipex.status, 0) == -1)
+			perror("waitpid");
+		else
+		pipex.out = WEXITSTATUS(pipex.status);
+	}
+	exit(pipex.out);
 }

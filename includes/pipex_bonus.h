@@ -25,6 +25,7 @@
 //Struc
 typedef struct s_pipex_b
 {
+	pid_t	pids;
 	size_t	index;
 	int		check;
 	int		save_out;

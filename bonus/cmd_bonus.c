@@ -47,17 +47,13 @@ void	cmd(t_pipex_b *pipex, char *av, char **envp)
 		pid_error(pipex);
 	if (pipex->pid == 0)
 		cmd_pid(pipex, av, envp);
-	else
+	close(pipex->pipe_fd[1]);
+	if (dup2(pipex->pipe_fd[0], STDIN_FILENO) == -1)
 	{
-		close(pipex->pipe_fd[1]);
-		if (dup2(pipex->pipe_fd[0], STDIN_FILENO) == -1)
-		{
-			perror("dup2 stdout");
-			close(pipex->pipe_fd[0]);
-			close(pipex->fd[0]);
-			exit(5);
-		}
+		perror("dup2 stdout");
 		close(pipex->pipe_fd[0]);
-		waitpid(pipex->pid, NULL, 0);
+		close(pipex->fd[0]);
+		exit(5);
 	}
+	close(pipex->pipe_fd[0]);
 }
