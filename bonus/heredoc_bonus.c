@@ -54,7 +54,7 @@ void	check_here_doc(t_pipex_b *pipex)
 
 int	display_str(t_pipex_b *pipex, char **av)
 {
-	if (pipe(pipex->pipe_fd)== -1)
+	if (pipe(pipex->pipe_fd) == -1)
 	{
 		write_str("Broken pipe\n", 2);
 		exit (32);

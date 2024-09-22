@@ -64,7 +64,7 @@ OBJS = $(SRCS:.c=.o)
 ######################## 📁 #############################
 
 BONUS_SRC = bonus/pipex_bonus.c bonus/return_bonus.c bonus/heredoc_bonus.c bonus/fd_bonus.c\
-	bonus/cmd_bonus.c bonus/exec_bonus.c
+	bonus/cmd_bonus.c bonus/exec_bonus.c bonus/pipex_bonus_utils.c bonus/error_bonus.c
 
 BONUS_SRCS = ${BONUS_SRC} ${LIBC} ${PRINTF_SRC} ${GNL_SRC}
 

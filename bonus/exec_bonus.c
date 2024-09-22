@@ -12,25 +12,6 @@
 
 #include "../includes/pipex_bonus.h"
 
-
-int	envp_path(char **envp, t_pipex_b *pipex)
-{
-	int	i;
-
-	i = 0;
-	pipex->path_head = NULL;
-	while (envp[i] != NULL)
-	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-		{
-			pipex->path_head = envp[i] + 5;
-			break ;
-		}
-		i++;
-	}
-	return (0);
-}
-
 int	access_path_bonus(t_pipex_b *pipex, char *cmd)
 {
 	if (access(pipex->path, F_OK) == 0)
@@ -43,6 +24,13 @@ int	access_path_bonus(t_pipex_b *pipex, char *cmd)
 	return (0);
 }
 
+void	fail_malloc(t_pipex_b *pipex, char *tmp_dir)
+{
+	free(tmp_dir);
+	free(pipex->path);
+	free(pipex->directory);
+}
+
 int	find_path(t_pipex_b *pipex, char *cmd, char **envp)
 {
 	char	*tmp_dir;
@@ -53,10 +41,10 @@ int	find_path(t_pipex_b *pipex, char *cmd, char **envp)
 	{
 		tmp_dir = ft_strjoin(pipex->directory, "/");
 		if (tmp_dir == NULL)
-			return (free(pipex->directory), free(pipex->path), free(tmp_dir), 1);
+			return (fail_malloc(pipex, tmp_dir), 1);
 		pipex->path = ft_strjoin(tmp_dir, cmd);
 		if (pipex->path == NULL)
-			return (free(pipex->directory), free(pipex->path), free(tmp_dir), 1);
+			return (fail_malloc(pipex, tmp_dir), 1);
 		if (access_path_bonus(pipex, cmd))
 			return (free(pipex->directory), free(tmp_dir), 0);
 		pipex->directory = ft_strtok(NULL, ':');
@@ -64,14 +52,12 @@ int	find_path(t_pipex_b *pipex, char *cmd, char **envp)
 		free(tmp_dir);
 	}
 	if (ft_strchr(cmd, '/') != NULL)
-		return (write_str2(cmd,": No such file or directory\n", 2), 1);
-	return (write_str2(cmd,": Command not found\n", 2), 1);
+		return (write_str2(cmd, ": No such file or directory\n", 2), 1);
+	return (write_str2(cmd, ": Command not found\n", 2), 1);
 }
 
-void	exec_aout(char **envp, char *cmd)
+void	exec_aout(t_pipex_b *pipex, char **envp, char *cmd)
 {
-	char	**tmp_flag;
-
 	if (access(cmd, X_OK) == 0)
 	{
 		if (cmd[0] == '.' && cmd[1] == '/')
@@ -82,20 +68,20 @@ void	exec_aout(char **envp, char *cmd)
 			return ;
 		}
 	}
-	tmp_flag = ft_split(cmd, ' ');
-	if (tmp_flag == NULL)
+	pipex->flag = ft_split(cmd, ' ');
+	if (pipex->flag == NULL)
 		exit(5);
-	if (execve(cmd, tmp_flag, envp) == -1)
+	if (execve(cmd, pipex->flag, envp) == -1)
 	{
 		if (ft_strchr(cmd, '/') != NULL)
 		{
-			write_str2(cmd,": No such file or directory\n", 2);
+			write_str2(cmd, ": No such file or directory\n", 2);
 			exit(2);
 		}
 		else
 			write_str("Operation not permitted\n", 2);
+		clean_split(pipex->flag);
 		exit(1);
-		clean_split(tmp_flag);
 	}
 }
 
@@ -105,7 +91,7 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp)
 
 	if (access(cmd, F_OK) == 0)
 	{
-		exec_aout(envp, cmd);
+		exec_aout(pipex, envp, cmd);
 		return ;
 	}
 	tmp_flag = ft_split(cmd, ' ');
@@ -127,4 +113,3 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp)
 		exit(1);
 	}
 }
-

@@ -28,7 +28,7 @@ int	fd(t_pipex_b *pipex, char *filename, int check_fd)
 		pipex->code = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 		if (pipex->code == -1)
 		{
-			write_str2(filename, ": Permission denied\n",2);
+			write_str2(filename, ": Permission denied\n", 2);
 			close(pipex->fd[0]);
 			exit(13);
 		}
