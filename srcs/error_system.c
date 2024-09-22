@@ -12,7 +12,6 @@
 
 #include "../includes/pipex.h"
 
-
 void	exit_error(t_pipex *pipex, char **av)
 {
 	pipex->out = 0;

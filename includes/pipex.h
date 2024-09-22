@@ -89,7 +89,7 @@ void	error_file_denied(char *filename, t_pipex *pipex);
 void	error_file(char *filename);
 void	error_close(char *filename);
 //Fd utile
-void	close_check(t_pipex  *pipex, char *filename);
+void	close_check(t_pipex *pipex, char *filename);
 int		close_fd(t_pipex *pipex);
 size_t	count_arg(char **str);
 char	*find_file(char *str);
@@ -98,6 +98,8 @@ void	free_file(t_pipex *pipex);
 int		child_fork(t_pipex *pipex, char **av, char **envp);
 int		child2_fork(t_pipex *pipex, char **av, char **envp);
 //Main
+void	child_one(t_pipex *pipex, char **av, char **envp);
+void	child_second(t_pipex *pipex, char **av, char **envp);
 int		fork_main(t_pipex *pipex, char **av, char **envp);
 //Pipe utile
 void	perror_return(t_pipex *pipex, char *av);

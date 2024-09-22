@@ -60,7 +60,7 @@ int	child_fork(t_pipex *pipex, char **av, char **envp)
 	}
 	if (check_exit == 1 && pipex->check == 0)
 		return (1);
-	return ( 0);
+	return (0);
 }
 
 int	manage_child2(t_pipex *pipex, char *av, char **envp)

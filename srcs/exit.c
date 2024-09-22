@@ -31,5 +31,5 @@ void	exit_out(t_pipex *pipex)
 	else if (pipex->exit_str == NULL || ft_strcmp(pipex->exit_str, OFM) == 0)
 		pipex->out = 12;
 	if (pipex->exit_str != NULL)
-			free(pipex->exit_str);
+		free(pipex->exit_str);
 }

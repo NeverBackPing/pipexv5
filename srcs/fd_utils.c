@@ -52,7 +52,7 @@ char	*find_file(char *str)
 	return (file);
 }
 
-void	close_check(t_pipex  *pipex, char *filename)
+void	close_check(t_pipex *pipex, char *filename)
 {
 	if (ft_strncmp(filename, pipex->infile, ft_strlen(pipex->infile)) == 0)
 	{
@@ -80,7 +80,7 @@ void	close_check(t_pipex  *pipex, char *filename)
 
 int	close_fd(t_pipex *pipex)
 {
-if (access(pipex->infile, F_OK) == 0 && pipex->fd[0] > 0)
+	if (access(pipex->infile, F_OK) == 0 && pipex->fd[0] > 0)
 	{
 		if (pipex->fd[0] > 0)
 			close(pipex->fd[0]);

@@ -58,9 +58,7 @@ void	print_error_cmd(t_pipex *pipex, char *s)
 		pipex->exit_str = ft_strdup(NOSUCH);
 	else
 		pipex->exit_str = ft_strdup(CND);
-
 }
-
 
 void	print_error(t_pipex *pipex)
 {
@@ -74,5 +72,4 @@ void	print_error(t_pipex *pipex)
 	}
 	else
 		pipex->exit_str = ft_strdup(CND);
-
 }

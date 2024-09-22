@@ -46,7 +46,6 @@ int	fd_outfile(t_pipex *pipex)
 	return (0);
 }
 
-
 int	fd_infile(t_pipex *pipex)
 {
 	if (pipex->fd[0] == -1)

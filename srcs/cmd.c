@@ -1,5 +1,16 @@
-#include "../includes/pipex.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sjossain <sjossain@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 16:14:52 by sjossain          #+#    #+#             */
+/*   Updated: 2024/09/11 16:14:52 by sjossain         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "../includes/pipex.h"
 
 int	path_envp(char **envp, t_pipex *pipex)
 {
@@ -18,7 +29,6 @@ int	path_envp(char **envp, t_pipex *pipex)
 	}
 	return (0);
 }
-
 
 int	switch_cmd(t_pipex *pipex, char *av)
 {
@@ -63,7 +73,7 @@ int	cmd_exec(t_pipex *pipex, char *av)
 		}
 		else
 		{
-			pipex->exit_str =  ft_strdup(DENIED);
+			pipex->exit_str = ft_strdup(DENIED);
 			clean_split(pipex->tmp);
 			return (1);
 		}
@@ -97,5 +107,6 @@ int	check_path(t_pipex *pipex, char *av, char **envp)
 		pipex->directory = ft_strtok(NULL, ':');
 		path_clean(pipex);
 	}
-	return (print_error_cmd(pipex, pipex->cmd[0]), clean_split(pipex->cmd), 1);
+	print_error_cmd(pipex, pipex->cmd[0]);
+	return (clean_split(pipex->cmd), 1);
 }

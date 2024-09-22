@@ -12,9 +12,8 @@
 
 #include "../includes/pipex.h"
 
-int	fork_main(t_pipex *pipex, char **av, char **envp)
+void	child_one(t_pipex *pipex, char **av, char **envp)
 {
-	pipex->child = fork();
 	if (pipex->child < 0)
 	{
 		write_str("Resource temporarily unavailable", 2);
@@ -32,7 +31,10 @@ int	fork_main(t_pipex *pipex, char **av, char **envp)
 			exit(pipex->out);
 		}
 	}
-	pipex->child2 = fork();
+}
+
+void	child_second(t_pipex *pipex, char **av, char **envp)
+{
 	if (pipex->child2 < 0)
 	{
 		write_str("Resource temporarily unavailable", 2);
@@ -42,22 +44,39 @@ int	fork_main(t_pipex *pipex, char **av, char **envp)
 	{
 		pipex->out = 0;
 		if (child2_fork(pipex, av, envp))
+		{
 			exit(pipex->out);
+		}
 		else
+		{
 			exit(pipex->out);
+		}
 	}
+}
+
+int	fork_main(t_pipex *pipex, char **av, char **envp)
+{
+	pipex->child = fork();
+	child_one(pipex, av, envp);
+	pipex->child2 = fork();
+	child_second(pipex, av, envp);
 	return (0);
+}
+
+void	init_var(t_pipex *pipex)
+{
+	pipex->status = 0;
+	pipex->status2 = 0;
+	pipex->out = 0;
+	pipex->exit_str = NULL;
+	pipex->path_find = NULL;
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	t_pipex	pipex;
 
-	pipex.status = 0;
-	pipex.status2 = 0;
-	pipex.out = 0;
-	pipex.exit_str = NULL;
-	pipex.path_find = NULL;
+	init_var(&pipex);
 	if (ac == 5)
 	{
 		if (*av[2] == '\0' || *av[3] == '\0')

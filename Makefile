@@ -54,7 +54,7 @@ GNL_OBJS = $(GNL_SRC:.c=.o)
 
 ######################## 📁 #############################
 
-SRC = srcs/main.c srcs/c.c srcs/cmd_utils.c srcs/error_system.c srcs/exec.c\
+SRC = srcs/main.c srcs/cmd.c srcs/cmd_utils.c srcs/error_system.c srcs/exec.c\
 	srcs/exit.c srcs/fd.c srcs/fd_utils.c srcs/file_error.c srcs/fork.c srcs/pipe_utils.c
 
 SRCS = ${SRC} ${LIBC} ${PRINTF_SRC} ${GNL_SRC}
