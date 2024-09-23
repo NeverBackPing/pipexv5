@@ -98,7 +98,7 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp, pid_t *pids)
 	if (tmp_flag == NULL)
 		exit(5);
 	if (find_path(pipex, tmp_flag[0], envp))
-		return (clean_split(tmp_flag), free(pids));
+		return (clean_split(tmp_flag));
 	if (execve(pipex->path, tmp_flag, envp) == -1)
 	{
 		write_str("Operation not permitted\n", 2);

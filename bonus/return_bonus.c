@@ -26,8 +26,13 @@ void	write_str(char *str, int fd)
 
 void	write_str2(char *str, char *str2, int fd)
 {
-	write(fd, str, ft_strlen(str));
-	write(fd, str2, ft_strlen(str2));
+	char	*tmp;
+
+	tmp = ft_strjoin(str, str2);
+	if (tmp == NULL)
+		perror("Out of memory\n");
+	write(fd, tmp, ft_strlen(tmp));
+	free(tmp);
 }
 
 void	error_return(t_pipex_b *pipex, char *av)
