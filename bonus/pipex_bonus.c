@@ -71,17 +71,14 @@ int	main(int ac, char **av, char **envp)
 		manage_here_doc(&pipex, av, ac);
 	else
 		manage_io(&pipex, av, ac);
-	if (pipex.check == 0)
+	pids = malloc_pid(ac);
+	while (pipex.index < (size_t)ac - 2)
 	{
-		pids = malloc_pid(ac);
-		while (pipex.index < (size_t)ac - 2)
-		{
-			cmd(&pipex, av[pipex.index++], envp);
-			pids[i++] = pipex.pid;
-		}
+		cmd(&pipex, av[pipex.index++], envp, pids);
+		pids[i++] = pipex.pid;
 	}
-	last_dup(&pipex);
-	execout(&pipex, av[pipex.index], envp);
-	last_exec(&pipex, i, pids);
+	last_dup(&pipex, pids);
+	execout(&pipex, av[pipex.index], envp, pids);
+	last_exec(&pipex, i - 1, pids);
 	exit(pipex.out);
 }

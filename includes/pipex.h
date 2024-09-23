@@ -67,9 +67,11 @@ typedef struct s_pipex
 int		access_path(t_pipex *pipex);
 int		check_path(t_pipex *pipex, char *av, char **envp);
 int		path_envp(char **envp, t_pipex *pipex);
+//CMD tool
+int		check_space(char *av);
 //CMD utile
 int		nb_slash(char *str);
-void	print_error_cmd(t_pipex *pipex, char *s);
+void	err_cmd(t_pipex *pipex, char *s);
 void	path_clean(t_pipex *pipex);
 void	clean_split(char **array);
 void	print_error(t_pipex *pipex);

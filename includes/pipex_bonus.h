@@ -61,13 +61,13 @@ typedef struct s_pipex_b
 	char	*exit_str;
 }	t_pipex_b;
 //Cmd
-void	cmd(t_pipex_b *pipex, char *av, char **envp);
+void	cmd(t_pipex_b *pipex, char *av, char **envp, pid_t *pids);
 //Error
 void	error_cmd_aout(char *cmd);
 //Exec
 int		access_path_bonus(t_pipex_b *pipex, char *cmd);
 void	exec_aout(t_pipex_b *pipex, char **envp, char *cmd);
-void	execout(t_pipex_b *pipex, char *cmd, char **envp);
+void	execout(t_pipex_b *pipex, char *cmd, char **envp, pid_t *pids);
 //Fd
 int		fd(t_pipex_b *pipex, char *finename, int check_fd);
 //here doc
@@ -82,7 +82,7 @@ void	clean_split(char **array);
 int		envp_path(char **envp, t_pipex_b *pipex);
 void	init_var(t_pipex_b *pipex);
 void	last_exec(t_pipex_b *pipex, size_t i, pid_t *pids);
-void	last_dup(t_pipex_b *pipex);
+void	last_dup(t_pipex_b *pipex, pid_t *pids);
 //Return
 void	error_return(t_pipex_b *pipex, char *av);
 int		write_pipe(int outfile, char *str);

@@ -85,7 +85,7 @@ void	exec_aout(t_pipex_b *pipex, char **envp, char *cmd)
 	}
 }
 
-void	execout(t_pipex_b *pipex, char *cmd, char **envp)
+void	execout(t_pipex_b *pipex, char *cmd, char **envp, pid_t *pids)
 {
 	char	**tmp_flag;
 
@@ -96,19 +96,14 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp)
 	}
 	tmp_flag = ft_split(cmd, ' ');
 	if (tmp_flag == NULL)
-	{
 		exit(5);
-		return ;
-	}
 	if (find_path(pipex, tmp_flag[0], envp))
-	{
-		clean_split(tmp_flag);
-		return ;
-	}
+		return (clean_split(tmp_flag));
 	if (execve(pipex->path, tmp_flag, envp) == -1)
 	{
 		write_str("Operation not permitted\n", 2);
 		clean_split(tmp_flag);
+		free(pids);
 		close(pipex->fd[1]);
 		exit(1);
 	}

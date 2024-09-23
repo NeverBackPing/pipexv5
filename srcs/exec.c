@@ -43,7 +43,7 @@ int	exec_cmd(t_pipex *pipex, char **envp)
 	}
 	if (execve(pipex->path_find, pipex->cmd, envp) == -1)
 	{
-		print_error_cmd(pipex, pipex->cmd[0]);
+		err_cmd(pipex, pipex->cmd[0]);
 		clean_split(pipex->cmd);
 		free(pipex->path_find);
 		return (1);

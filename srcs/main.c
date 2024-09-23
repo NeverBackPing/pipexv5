@@ -79,8 +79,6 @@ int	main(int ac, char **av, char **envp)
 	init_var(&pipex);
 	if (ac == 5)
 	{
-		if (*av[2] == '\0' || *av[3] == '\0')
-			exit(pipex.out);
 		if (pipe(pipex.pipe_fd) < 0)
 		{
 			write_str("Broken pipe", 2);

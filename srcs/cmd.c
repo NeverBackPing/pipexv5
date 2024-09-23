@@ -39,21 +39,6 @@ int	switch_cmd(t_pipex *pipex, char *av)
 	return (0);
 }
 
-int	access_path(t_pipex *pipex)
-{
-	if (access(pipex->path_find, F_OK) == 0)
-	{
-		if (access(pipex->path_find, X_OK) == 0)
-			return (1);
-		else
-		{
-			pipex->exit_str = ft_strdup(DENIED);
-			return (1);
-		}
-	}
-	return (0);
-}
-
 int	cmd_exec(t_pipex *pipex, char *av)
 {
 	pipex->check_aout = 0;
@@ -66,7 +51,7 @@ int	cmd_exec(t_pipex *pipex, char *av)
 				return (1);
 			if (ft_strchr(pipex->cmd[0], '/') == NULL)
 			{
-				print_error_cmd(pipex, pipex->cmd[0]);
+				err_cmd(pipex, pipex->cmd[0]);
 				return (clean_split(pipex->cmd), 1);
 			}
 			return (0);
@@ -83,8 +68,25 @@ int	cmd_exec(t_pipex *pipex, char *av)
 	return (0);
 }
 
+int	access_path(t_pipex *pipex)
+{
+	if (access(pipex->path_find, F_OK) == 0)
+	{
+		if (access(pipex->path_find, X_OK) == 0)
+			return (1);
+		else
+		{
+			pipex->exit_str = ft_strdup(DENIED);
+			return (1);
+		}
+	}
+	return (0);
+}
+
 int	check_path(t_pipex *pipex, char *av, char **envp)
 {
+	if (check_space(av))
+		return (err_cmd(pipex, av), 1);
 	path_envp(envp, pipex);
 	pipex->tmp = ft_split(av, ' ');
 	if (pipex->tmp == NULL)
@@ -107,6 +109,5 @@ int	check_path(t_pipex *pipex, char *av, char **envp)
 		pipex->directory = ft_strtok(NULL, ':');
 		path_clean(pipex);
 	}
-	print_error_cmd(pipex, pipex->cmd[0]);
-	return (clean_split(pipex->cmd), 1);
+	return (err_cmd(pipex, pipex->cmd[0]), clean_split(pipex->cmd), 1);
 }

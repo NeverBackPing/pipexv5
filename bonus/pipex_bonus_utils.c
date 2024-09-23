@@ -54,29 +54,28 @@ void	init_var(t_pipex_b *pipex)
 
 void	last_exec(t_pipex_b *pipex, size_t i, pid_t *pids)
 {
-	size_t	j;
+	size_t		j;
 
 	j = 0;
-	if ((pids == 0))
+	if (pids)
 	{
 		while (j++ < i)
 		{
 			if (waitpid(pids[j], &pipex->status, 0) == -1)
-			{
 				perror("waitpid");
-			}
 			pipex->out = WEXITSTATUS(pipex->status);
 		}
 	}
 	free(pids);
 }
 
-void	last_dup(t_pipex_b *pipex)
+void	last_dup(t_pipex_b *pipex, pid_t *pids)
 {
 	if (dup2(pipex->fd[1], STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
 		close(pipex->fd[1]);
+		free(pids);
 		exit(5);
 	}
 	close(pipex->fd[1]);

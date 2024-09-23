@@ -52,7 +52,7 @@ void	clean_split(char **array)
 	}
 }
 
-void	print_error_cmd(t_pipex *pipex, char *s)
+void	err_cmd(t_pipex *pipex, char *s)
 {
 	if (ft_strchr(s, '/') != NULL)
 		pipex->exit_str = ft_strdup(NOSUCH);
