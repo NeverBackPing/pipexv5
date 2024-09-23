@@ -15,8 +15,14 @@
 int	read_infile(t_pipex_b *pipex, char **av)
 {
 	close(pipex->pipe_fd[0]);
+	if (av[2][0] == '\0')
+	{
+		write_pipe(pipex->pipe_fd[1], "\n");
+		exit(0);
+	}
 	while (1)
 	{
+		write(1, "pipe heredoc> ", ft_strlen("pipe heredoc> "));
 		pipex->line = get_next_line(STDOUT_FILENO);
 		if (ft_strncmp(pipex->line, av[2], ft_strlen(av[2])) == 0)
 		{

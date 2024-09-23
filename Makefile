@@ -69,6 +69,7 @@ BONUS_SRC = bonus/pipex_bonus.c bonus/return_bonus.c bonus/heredoc_bonus.c bonus
 
 BONUS_SRCS = ${BONUS_SRC} ${LIBC} ${PRINTF_SRC} ${GNL_SRC}
 
+#patsubst
 OBJS_B = $(BONUS_SRCS:.c=.o)
 
 ######################## 🧠 #############################

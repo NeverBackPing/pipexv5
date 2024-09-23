@@ -52,6 +52,11 @@ void	init_var(t_pipex_b *pipex)
 	pipex->check = 0;
 }
 
+/* int	len_array()
+{
+	return ()
+} */
+
 void	last_exec(t_pipex_b *pipex, size_t i, pid_t *pids)
 {
 	size_t		j;
