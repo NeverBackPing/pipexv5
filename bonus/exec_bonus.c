@@ -76,6 +76,7 @@ void	exec_aout(t_pipex_b *pipex, char **envp, char *cmd)
 		if (ft_strchr(cmd, '/') != NULL)
 		{
 			write_str2(cmd, ": No such file or directory\n", 2);
+			clean_split(pipex->flag);
 			exit(2);
 		}
 		else
@@ -85,7 +86,7 @@ void	exec_aout(t_pipex_b *pipex, char **envp, char *cmd)
 	}
 }
 
-void	execout(t_pipex_b *pipex, char *cmd, char **envp, pid_t *pids)
+void	execout(t_pipex_b *pipex, char *cmd, char **envp)
 {
 	char	**tmp_flag;
 
@@ -103,7 +104,6 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp, pid_t *pids)
 	{
 		write_str("Operation not permitted\n", 2);
 		clean_split(tmp_flag);
-		free(pids);
 		close(pipex->fd[1]);
 		exit(1);
 	}

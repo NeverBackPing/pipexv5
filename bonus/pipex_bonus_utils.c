@@ -52,10 +52,6 @@ void	init_var(t_pipex_b *pipex)
 	pipex->check = 0;
 }
 
-/* int	len_array()
-{
-	return ()
-} */
 
 void	last_exec(t_pipex_b *pipex, size_t i, pid_t *pids)
 {
@@ -64,23 +60,23 @@ void	last_exec(t_pipex_b *pipex, size_t i, pid_t *pids)
 	j = 0;
 	if (pids)
 	{
-		while (j++ < i)
+		while (j < i)
 		{
 			if (waitpid(pids[j], &pipex->status, 0) == -1)
-				perror("waitpid");
+				NULL;//perror("waitpid");
 			pipex->out = WEXITSTATUS(pipex->status);
+			j++;
 		}
 	}
-	free(pids);
 }
 
-void	last_dup(t_pipex_b *pipex, pid_t *pids)
+void	last_dup(t_pipex_b *pipex)
 {
+	//1 swap with pipe_fd[1]
 	if (dup2(pipex->fd[1], STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
 		close(pipex->fd[1]);
-		free(pids);
 		exit(5);
 	}
 	close(pipex->fd[1]);

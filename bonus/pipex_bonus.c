@@ -59,9 +59,9 @@ int	*malloc_pid(int ac)
 
 int	main(int ac, char **av, char **envp)
 {
-	t_pipex_b	pipex;
-	pid_t		*pids;
-	size_t		i;
+	t_pipex_b		pipex;
+	pid_t			pids[PID_SIZE(ac)];
+	size_t			i;
 
 	i = 0;
 	init_var(&pipex);
@@ -71,14 +71,17 @@ int	main(int ac, char **av, char **envp)
 		manage_here_doc(&pipex, av, ac);
 	else
 		manage_io(&pipex, av, ac);
-	pids = malloc_pid(ac);
 	while (pipex.index < (size_t)ac - 2)
 	{
-		cmd(&pipex, av[pipex.index++], envp, pids);
-		pids[i++] = pipex.pid;
+		cmd(&pipex, av[pipex.index++], envp);
+		if (pipex.pid != 0)
+		{
+			pids[i] = pipex.pid;
+			i++;
+		}
 	}
-	last_dup(&pipex, pids);
-	execout(&pipex, av[pipex.index], envp, pids);
+	last_dup(&pipex);
 	last_exec(&pipex, i - 1, pids);
+	execout(&pipex, av[pipex.index], envp);
 	exit(pipex.out);
 }
