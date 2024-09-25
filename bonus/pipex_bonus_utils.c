@@ -45,8 +45,9 @@ int	envp_path(char **envp, t_pipex_b *pipex)
 	return (0);
 }
 
-void	init_var(t_pipex_b *pipex)
+void	init_var(t_pipex_b *pipex, char **envp)
 {
+	envp_path(envp, pipex);
 	pipex->out = 0;
 	pipex->index = 2;
 	pipex->check = 0;

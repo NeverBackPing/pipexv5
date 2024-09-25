@@ -42,29 +42,24 @@ void	manage_io(t_pipex_b *pipex, char **av, int ac)
 		close(pipex->fd[1]);
 		exit(5);
 	}
-	close(pipex->fd[0]);
-	if (pipex->check == 1)
-		pipex->index = ac - 2;
-}
-
-int	*malloc_pid(int ac)
-{
-	pid_t	*pids;
-
-	pids = (pid_t *)malloc((ac - 2) * sizeof(pid_t));
-	if (pids == NULL)
+	if (dup2(pipex->fd[1], STDOUT_FILENO) == -1)
+	{
+		write_str("Input/output error\n", 2);
+		close(pipex->fd[0]);
+		close(pipex->fd[1]);
 		exit(5);
-	return (pids);
+	}
+	close(pipex->fd[0]);
+	close(pipex->fd[1]);
+	if (pipex->check == 1)
+		pipex->index = 3;
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	t_pipex_b		pipex;
-	pid_t			pids[PID_SIZE(ac)];
-	size_t			i;
 
-	i = 0;
-	init_var(&pipex);
+	init_var(&pipex, envp);
 	if (ac < 5)
 		return (ft_printf("./pipex infile cmd1...cmdn oufile\n"), 1);
 	else if (ft_strcmp(av[1], "here_doc") == 0)
@@ -74,14 +69,17 @@ int	main(int ac, char **av, char **envp)
 	while (pipex.index < (size_t)ac - 2)
 	{
 		cmd(&pipex, av[pipex.index++], envp);
-		if (pipex.pid != 0)
-		{
-			pids[i] = pipex.pid;
-			i++;
-		}
 	}
-	last_dup(&pipex);
-	last_exec(&pipex, i - 1, pids);
-	execout(&pipex, av[pipex.index], envp);
+	pipex.pid = fork();
+	if (pipex.pid == 0)
+		execout(&pipex, av[pipex.index], envp);
+	else
+		waitpid(pipex.pid, &pipex.status, 0);
+	if (WIFEXITED(pipex.status))
+		pipex.out = WEXITSTATUS(pipex.status);
+	close(pipex.pipe_fd[0]);
+	close(pipex.pipe_fd[1]);
+	close(pipex.fd[0]);
+	close(pipex.fd[1]);
 	exit(pipex.out);
 }

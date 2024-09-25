@@ -20,10 +20,10 @@ void	pid_error(t_pipex_b *pipex)
 	exit (10);
 }
 
-void	cmd_pid(t_pipex_b *pipex, char *av, char **envp)
+/*void	cmd_pid(t_pipex_b *pipex, char *av, char **envp)
 {
-	close(pipex->pipe_fd[0]);
-	if (dup2(pipex->pipe_fd[1], STDOUT_FILENO) == -1)
+	close(pipex->pipe_fd[1]);
+	if (dup2(pipex->pipe_fd[0], STDIN_FILENO) == -1)
 	{
 		perror("dup2 stdout");
 		close(pipex->pipe_fd[1]);
@@ -33,30 +33,43 @@ void	cmd_pid(t_pipex_b *pipex, char *av, char **envp)
 	close(pipex->pipe_fd[1]);
 	execout(pipex, av, envp);
 	exit(0);
-}
+}*/
 
 void	cmd(t_pipex_b *pipex, char *av, char **envp)
 {
 	if (pipe(pipex->pipe_fd) == -1)
 	{
-		write_str("Broken pipe\n", 2);
+		write_str("error pipe\n", 2);
 		exit (32);
 	}
 	pipex->pid = fork();
 	if (pipex->pid == -1)
 		pid_error(pipex);
 	if (pipex->pid == 0)
-		cmd_pid(pipex, av, envp);
-	else
 	{
-		close(pipex->pipe_fd[1]);
 		if (dup2(pipex->pipe_fd[0], STDIN_FILENO) == -1)
 		{
 			perror("dup2 stdout");
-			close(pipex->pipe_fd[0]);
+			close(pipex->pipe_fd[1]);
+			close(pipex->fd[0]);
+			exit(5);
+		}
+		close(pipex->pipe_fd[1]);
+		close(pipex->pipe_fd[0]);
+		waitpid(pipex->pid, NULL, 0);
+	}
+	else
+	{
+		if (dup2(pipex->pipe_fd[1], STDOUT_FILENO) == -1)
+		{
+			perror("dup2 stdout");
+			close(pipex->pipe_fd[1]);
 			close(pipex->fd[0]);
 			exit(5);
 		}
 		close(pipex->pipe_fd[0]);
+		close(pipex->pipe_fd[1]);
+		execout(pipex, av, envp);
+		exit(0);
 	}
 }

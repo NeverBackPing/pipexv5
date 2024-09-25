@@ -31,11 +31,10 @@ void	fail_malloc(t_pipex_b *pipex, char *tmp_dir)
 	free(pipex->directory);
 }
 
-int	find_path(t_pipex_b *pipex, char *cmd, char **envp)
+int	find_path(t_pipex_b *pipex, char *cmd)
 {
 	char	*tmp_dir;
 
-	envp_path(envp, pipex);
 	pipex->directory = ft_strtok(pipex->path_head, ':');
 	while (pipex->directory != NULL)
 	{
@@ -98,7 +97,7 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp)
 	tmp_flag = ft_split(cmd, ' ');
 	if (tmp_flag == NULL)
 		exit(5);
-	if (find_path(pipex, tmp_flag[0], envp))
+	if (find_path(pipex, tmp_flag[0]))
 		return (clean_split(tmp_flag));
 	if (execve(pipex->path, tmp_flag, envp) == -1)
 	{

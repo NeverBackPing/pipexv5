@@ -81,7 +81,7 @@ void	manage_io(t_pipex_b *pipex, char **av, int ac);
 //Pipex utils
 void	clean_split(char **array);
 int		envp_path(char **envp, t_pipex_b *pipex);
-void	init_var(t_pipex_b *pipex);
+void	init_var(t_pipex_b *pipex, char **envp);
 void	last_exec(t_pipex_b *pipex, size_t i, pid_t *pids);
 void	last_dup(t_pipex_b *pipex);
 //Return
