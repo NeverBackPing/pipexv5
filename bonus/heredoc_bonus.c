@@ -14,7 +14,6 @@
 
 int	read_infile(t_pipex_b *pipex, char **av)
 {
-	close(pipex->pipe_fd[0]);
 	if (av[2][0] == '\0')
 	{
 		write_pipe(pipex->pipe_fd[1], "\n");
@@ -31,10 +30,9 @@ int	read_infile(t_pipex_b *pipex, char **av)
 		}
 		if (write_pipe(pipex->pipe_fd[1], pipex->line) == -1)
 		{
-			write_str("write error\n", 2);
 			if (pipex->line != NULL)
 				free(pipex->line);
-			return (1);
+			return (write_str("write error\n", 2), 1);
 		}
 		free(pipex->line);
 	}
@@ -72,7 +70,10 @@ int	display_str(t_pipex_b *pipex, char **av)
 		exit (10);
 	}
 	if (!pipex->pid)
+	{
+		close(pipex->pipe_fd[0]);
 		read_infile(pipex, av);
+	}
 	else
 		check_here_doc(pipex);
 	return (0);

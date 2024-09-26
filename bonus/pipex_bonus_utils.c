@@ -53,32 +53,16 @@ void	init_var(t_pipex_b *pipex, char **envp)
 	pipex->check = 0;
 }
 
-
-void	last_exec(t_pipex_b *pipex, size_t i, pid_t *pids)
+int	just_space(char *cmd)
 {
-	size_t		j;
+	int	i;
 
-	j = 0;
-	if (pids)
+	i = 0;
+	while (cmd[i] != '\0')
 	{
-		while (j < i)
-		{
-			if (waitpid(pids[j], &pipex->status, 0) == -1)
-				NULL;//perror("waitpid");
-			pipex->out = WEXITSTATUS(pipex->status);
-			j++;
-		}
+		if (cmd[i] != ' ')
+			return (0);
+		i++;
 	}
-}
-
-void	last_dup(t_pipex_b *pipex)
-{
-	//1 swap with pipe_fd[1]
-	if (dup2(pipex->fd[1], STDOUT_FILENO) < 0)
-	{
-		perror("dup2");
-		close(pipex->fd[1]);
-		exit(5);
-	}
-	close(pipex->fd[1]);
+	return (1);
 }

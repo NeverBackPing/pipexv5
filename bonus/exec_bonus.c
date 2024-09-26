@@ -62,10 +62,7 @@ void	exec_aout(t_pipex_b *pipex, char **envp, char *cmd)
 		if (cmd[0] == '.' && cmd[1] == '/')
 			NULL;
 		else
-		{
-			error_cmd_aout(cmd);
-			return ;
-		}
+			return (error_cmd_aout(cmd));
 	}
 	pipex->flag = ft_split(cmd, ' ');
 	if (pipex->flag == NULL)
@@ -89,6 +86,11 @@ void	execout(t_pipex_b *pipex, char *cmd, char **envp)
 {
 	char	**tmp_flag;
 
+	if (cmd[0] == '\0' || just_space(cmd))
+	{
+		write_str2(cmd, ": Command not found\n", 2);
+		exit(127);
+	}
 	if (access(cmd, F_OK) == 0)
 	{
 		exec_aout(pipex, envp, cmd);

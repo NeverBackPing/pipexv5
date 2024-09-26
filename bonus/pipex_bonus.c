@@ -72,14 +72,13 @@ int	main(int ac, char **av, char **envp)
 	}
 	pipex.pid = fork();
 	if (pipex.pid == 0)
+	{
 		execout(&pipex, av[pipex.index], envp);
+		exit(1);
+	}
 	else
 		waitpid(pipex.pid, &pipex.status, 0);
 	if (WIFEXITED(pipex.status))
 		pipex.out = WEXITSTATUS(pipex.status);
-	close(pipex.pipe_fd[0]);
-	close(pipex.pipe_fd[1]);
-	close(pipex.fd[0]);
-	close(pipex.fd[1]);
 	exit(pipex.out);
 }

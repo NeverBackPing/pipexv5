@@ -22,7 +22,6 @@ int	fd(t_pipex_b *pipex, char *filename, int check_fd)
 			write_str2(filename, " :No such file or directory\n", 2);
 			pipex->code = open("/dev/null", O_RDONLY, 0777);
 			pipex->check = 1;
-			//pipex->index = 3;
 		}
 	}
 	if (check_fd == 1)
