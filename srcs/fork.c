@@ -14,7 +14,7 @@
 
 int	manage_child(t_pipex *pipex, char *av, char **envp)
 {
-	if (access(pipex->infile, F_OK) == 0)
+	if (access(pipex->infile, F_OK | R_OK) == 0)
 	{
 		if (check_path(pipex, av, envp))
 			return (exit_out(pipex), close_fd(pipex), 1);

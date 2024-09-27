@@ -12,6 +12,18 @@
 
 #include "../includes/pipex_bonus.h"
 
+void exit_here_doc(t_pipex_b *pipex, char *lim)
+{
+	if (ft_strncmp(pipex->line, lim, ft_strlen(lim)) == 0)
+	{
+		if (pipex->line[ft_strlen(lim) + 1] == '\0')
+		{
+			free(pipex->line);
+			exit(0);
+		}
+	}
+}
+
 int	read_infile(t_pipex_b *pipex, char **av)
 {
 	if (av[2][0] == '\0')
@@ -23,11 +35,7 @@ int	read_infile(t_pipex_b *pipex, char **av)
 	{
 		write(1, "pipe heredoc> ", ft_strlen("pipe heredoc> "));
 		pipex->line = get_next_line(STDOUT_FILENO);
-		if (ft_strncmp(pipex->line, av[2], ft_strlen(av[2])) == 0)
-		{
-			free(pipex->line);
-			exit(0);
-		}
+		exit_here_doc(pipex, av[2]);
 		if (write_pipe(pipex->pipe_fd[1], pipex->line) == -1)
 		{
 			if (pipex->line != NULL)
