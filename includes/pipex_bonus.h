@@ -61,6 +61,8 @@ typedef struct s_pipex_b
 	char	*exit_str;
 }	t_pipex_b;
 //Cmd
+void	pipe_std(t_pipex_b *pipex);
+void	create(t_pipex_b *pipex);
 void	cmd(t_pipex_b *pipex, char *av, char **envp);
 //Error
 void	error_cmd_aout(char *cmd);

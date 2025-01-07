@@ -67,17 +67,8 @@ void	check_here_doc(t_pipex_b *pipex)
 
 int	display_str(t_pipex_b *pipex, char **av)
 {
-	if (pipe(pipex->pipe_fd) == -1)
-	{
-		write_str("Broken pipe\n", 2);
-		exit (32);
-	}
-	pipex->pid = fork();
-	if (pipex->pid == -1)
-	{
-		write_str("Resource temporarily unavailable\n", 2);
-		exit (10);
-	}
+	pipe_std(pipex);
+	create(pipex);
 	if (!pipex->pid)
 	{
 		close(pipex->pipe_fd[0]);

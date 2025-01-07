@@ -70,7 +70,7 @@ int	main(int ac, char **av, char **envp)
 	{
 		if (av[pipex.index + 2] == NULL)
 		{
-			pipex.pid = fork();
+			create(&pipex);
 			if (pipex.pid == 0)
 			{
 				execout(&pipex, av[pipex.index], envp);
