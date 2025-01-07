@@ -16,7 +16,6 @@ void	pid_error(t_pipex_b *pipex)
 {
 	write_str("Resource temporarily unavailable\n", 2);
 	close(pipex->pipe_fd[0]);
-	close(pipex->pipe_fd[1]);
 	exit (10);
 }
 
