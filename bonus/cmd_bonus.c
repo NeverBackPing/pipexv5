@@ -35,28 +35,35 @@ void	cmd_pid(t_pipex_b *pipex, char *av, char **envp)
 	exit(0);
 }
 
-void	cmd(t_pipex_b *pipex, char *av, char **envp)
+void	pipe_std(t_pipex_b *pipex)
 {
 	if (pipe(pipex->pipe_fd) == -1)
 	{
 		write_str("error pipe\n", 2);
 		exit (32);
 	}
+}
+
+void	create(t_pipex_b *pipex)
+{
 	pipex->pid = fork();
 	if (pipex->pid == -1)
 		pid_error(pipex);
+}
+
+void	cmd(t_pipex_b *pipex, char *av, char **envp)
+{
+	pipe_std(pipex);
+	create(pipex);
 	if (pipex->pid == 0)
 		cmd_pid(pipex, av, envp);
-	else
+	if (dup2(pipex->pipe_fd[0], STDIN_FILENO) == -1)
 	{
-		if (dup2(pipex->pipe_fd[0], STDIN_FILENO) == -1)
-		{
-			perror("dup2 stdout");
-			close(pipex->pipe_fd[1]);
-			close(pipex->fd[0]);
-			exit(5);
-		}
+		perror("dup2 stdout");
 		close(pipex->pipe_fd[1]);
-		close(pipex->pipe_fd[0]);
+		close(pipex->fd[0]);
+		exit(5);
 	}
+	close(pipex->pipe_fd[1]);
+	close(pipex->pipe_fd[0]);
 }
