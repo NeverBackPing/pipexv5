@@ -19,6 +19,7 @@ void exit_here_doc(t_pipex_b *pipex, char *lim)
 		if (pipex->line[ft_strlen(lim) + 1] == '\0')
 		{
 			free(pipex->line);
+			close(pipex->pipe_fd[1]);
 			exit(0);
 		}
 	}
@@ -34,18 +35,18 @@ int	read_infile(t_pipex_b *pipex, char **av)
 	while (1)
 	{
 		write(1, "pipe heredoc> ", ft_strlen("pipe heredoc> "));
+		close(pipex->pipe_fd[0]);
 		pipex->line = get_next_line(STDOUT_FILENO);
 		exit_here_doc(pipex, av[2]);
 		if (write_pipe(pipex->pipe_fd[1], pipex->line) == -1)
 		{
 			if (pipex->line != NULL)
 				free(pipex->line);
+			close(pipex->pipe_fd[1]);
 			return (write_str("write error\n", 2), 1);
 		}
 		free(pipex->line);
 	}
-	if (pipex->line != NULL)
-		free(pipex->line);
 	return (0);
 }
 
@@ -82,7 +83,8 @@ int	display_str(t_pipex_b *pipex, char **av)
 		close(pipex->pipe_fd[0]);
 		read_infile(pipex, av);
 	}
-	else
-		check_here_doc(pipex);
+	check_here_doc(pipex);
+	close(pipex->pipe_fd[1]);
+	close(pipex->pipe_fd[0]);
 	return (0);
 }
