@@ -60,24 +60,27 @@ int	main(int ac, char **av, char **envp)
 	t_pipex_b		pipex;
 
 	init_var(&pipex, envp);
-	if (ac < 5)
+	if (ac < 4)
 		return (ft_printf("./pipex infile cmd1...cmdn oufile\n"), 1);
 	else if (ft_strcmp(av[1], "here_doc") == 0)
 		manage_here_doc(&pipex, av, ac);
 	else
 		manage_io(&pipex, av, ac);
-	while (pipex.index < (size_t)ac - 2)
+	while (pipex.index < (size_t)ac - 1)
 	{
+		if (av[pipex.index + 2] == NULL)
+		{
+			pipex.pid = fork();
+			if (pipex.pid == 0)
+			{
+				execout(&pipex, av[pipex.index], envp);
+				exit(0);
+			}
+			break ;
+		}
 		cmd(&pipex, av[pipex.index++], envp);
 	}
-	pipex.pid = fork();
-	if (pipex.pid == 0)
-	{
-		execout(&pipex, av[pipex.index], envp);
-		exit(1);
-	}
-	else
-		waitpid(pipex.pid, &pipex.status, 0);
+	waitpid(pipex.pid, &pipex.status, 0);
 	if (WIFEXITED(pipex.status))
 		pipex.out = WEXITSTATUS(pipex.status);
 	exit(pipex.out);
